@@ -1,0 +1,1 @@
+Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' | Format-List  TimeCreated, Id, LevelDisplayName, Message

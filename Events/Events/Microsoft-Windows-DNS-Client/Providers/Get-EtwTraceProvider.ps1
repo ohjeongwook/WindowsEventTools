@@ -1,0 +1,1 @@
+Get-EtwTraceProvider -Guid '{1C95126E-7EEA-49A9-A3FE-A378B03DDB4D}'

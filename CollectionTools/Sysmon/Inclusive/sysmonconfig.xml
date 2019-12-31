@@ -1,0 +1,250 @@
+<!--
+  sysmon-config | A Sysmon configuration focused on default high-quality event tracing and easy customization by the community
+  Master version:	64 | Date: 2018-01-30
+  Master author:	@SwiftOnSecurity, other contributors also credited in-line or on Git
+  Master project:	https://github.com/SwiftOnSecurity/sysmon-config
+  Master license:	Creative Commons Attribution 4.0 | You may privatize, fork, edit, teach, publish, or deploy for commercial use - with attribution in the text.
+
+  Fork version:	<N/A>
+  Fork author:	<N/A>
+  Fork project:	<N/A>
+  Fork license:	<N/A>
+
+  REQUIRED: Sysmon version 7.01 or higher (due to changes in registry syntax and bug-fixes)
+	https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon
+	Note that 6.03 and 7.01 have critical fixes for filtering, it's recommended you stay updated.
+
+  NOTE: To collect Sysmon logs centrally for free, see https://aka.ms/WEF. Command to allow log access to the Network Service:
+	wevtutil.exe sl Microsoft-Windows-Sysmon/Operational /ca:O:BAG:SYD:(A;;0xf0005;;;SY)(A;;0x5;;;BA)(A;;0x1;;;S-1-5-32-573)(A;;0x1;;;NS)
+
+  NOTE: Do not let the size and complexity of this configuration discourage you from customizing it or building your own.
+	This configuration is based around known, high-signal event tracing, and thus appears complicated, but it's only very
+	detailed. Significant effort over years has been invested in front-loading as much filtering as possible onto the
+	client. This is to make analysis of intrusions possible by hand, and to try to surface anomalous activity as quickly
+	as possible to any technician armed only with Event Viewer. Its purpose is to democratize system monitoring for all organizations.
+
+  NOTE: Sysmon is NOT a whitelist solution or HIDS engine, it is a computer change and event logging tool with very basic exclude rules.
+	Do NOT ignore everything possible. Sysmon's purpose is providing context during a threat or problem investigation. Legitimate
+	processes are routinely used by threats - do not blindly exclude them. Additionally, be mindful of process-hollowing / imitation.
+
+  NOTE: Sysmon is not hardened against an attacker with admin rights. Additionally, this configuration offers an attacker, willing
+	to study it, many ways to evade some of the logging. If you are in a high-threat environment, you should consider a much broader
+	log-most approach. However, in the vast majority of cases, an attacker will bumble along through multiple behavioral traps which
+	this configuration monitors, especially in the first minutes.
+
+  TECHNICAL:
+  - Run sysmon.exe -? for a briefing on Sysmon configuration.
+  - Other languages may require localization. Registry and Filesystem paths can change. For example, \shell\open\command\, where "open" is localized.
+  - Sysmon does not support nested/multi-conditional rules. There are only blanket INCLUDE and EXCLUDE. "Exclude" rules override "Include" rules.
+  - If you only specify exclude for a filtering subsection, everything in that subsection is logged by default.
+  - Some Sysmon monitoring abilities are not meant for widely deployed general-purpose use due to performance impact. Depends on environment.
+  - Duplicate or overlapping "Include" rules do not result in duplicate events being logged.
+  - All characters enclosed by XML tags are always interpreted literally. Sysmon does not support wildcards (*), alternate characters, or RegEx.
+  - In registry events, the value name is appended to the full key path with a "\" delimiter. Default key values are named "\(Default)"
+  - "Image" is a technical term for a compiled binary file like an EXE or DLL. Also, it can match just the filename, or entire path.
+  - "ProcessGuid" is randomly generated, assigned, and tracked by Sysmon to assist in tracing individual process launches. Cleared on service restart.
+  - "LoginGuid" is randomly generated, assigned, and tracked by Sysmon to assist in tracing individual user sessions. Cleared on service restart.
+  - Sysmon does not track which rule caused an event to be logged.
+
+  FILTERING: Filter conditions available for use are: is, is not, contains, excludes, begin with, end with, less than, more than, image
+  - The "image" filter is usable with any field. Same as "is" but can either match the entire string, or only the text after the last "\" in the string. Credit: @mattifestation
+
+  PERFORMANCE: By using "end with" you can save performance by starting a string match at the end of a line, which usually triggers earlier.
+-->
+
+<Sysmon schemaversion="4.00">
+	<!--SYSMON META CONFIG-->
+	<HashAlgorithms>md5,sha256</HashAlgorithms> <!-- Both MD5 and SHA256 are the industry-standard algorithms for identifying files -->
+	<CheckRevocation/> <!-- Check loaded drivers, log if their code-signing certificate has been revoked, in case malware stole one to sign a kernel driver -->
+
+	<!-- <ImageLoad/> --> <!-- Would manually force-on ImageLoad monitoring, even without configuration below. Included only documentation. -->
+	<!-- <ProcessAccessConfig/> --> <!-- Would manually force-on ProcessAccess monitoring, even without configuration below. Included only documentation. -->
+	<!-- <PipeMonitoringConfig/> --> <!-- Would manually force-on PipeCreated / PipeConnected events, even without configuration below. Included only documentation. -->
+	<EventFiltering>
+	<!--SYSMON EVENT ID 1 : PROCESS CREATION [ProcessCreate]-->
+		<!--COMMENT:	All process launched will be included, except for what matches a rule below. It's best to be as specific as possible, to
+			avoid user-mode executables imitating other process names to avoid logging, or if malware drops files in an existing directory.
+			Ultimately, you must weigh CPU time checking many detailed rules, against the risk of malware exploiting the blindness created.
+			Beware of Masquerading, where attackers imitate the names and paths of legitimate tools. Ideally, you'd use both file path and
+			code signatures to validate, but Sysmon does not support that. Look into Windows Device Guard for whitelisting support. -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessID, Image, FileVersion, Description, Product, Company, CommandLine, CurrentDirectory, User, LogonGuid, LogonId, TerminalSessionId, IntegrityLevel, Hashes, ParentProcessGuid, ParentProcessId, ParentImage, ParentCommandLine-->
+		<ProcessCreate onmatch="exclude">
+		</ProcessCreate>
+
+	<!--SYSMON EVENT ID 2 : FILE CREATION TIME RETROACTIVELY CHANGED IN THE FILESYSTEM [FileCreateTime]-->
+		<!--COMMENT:	[ https://attack.mitre.org/wiki/Technique/T1099 ] -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, TargetFilename, CreationUtcTime, PreviousCreationUtcTime-->
+		<FileCreateTime onmatch="include">
+			<Image condition="begin with">C:\Users</Image> <!--Look for timestomping in user area-->
+		</FileCreateTime>
+
+		<FileCreateTime onmatch="exclude">
+			<Image condition="image">OneDrive.exe</Image> <!--OneDrive constantly changes file times-->
+			<Image condition="image">C:\Windows\system32\backgroundTaskHost.exe</Image>
+			<Image condition="contains">setup</Image> <!--Ignore setups-->
+			<Image condition="contains">install</Image> <!--Ignore setups-->
+			<Image condition="contains">Update\</Image> <!--Ignore setups-->
+			<Image condition="end with">redist.exe</Image> <!--Ignore setups-->
+			<Image condition="is">msiexec.exe</Image> <!--Ignore setups-->
+			<Image condition="is">TrustedInstaller.exe</Image> <!--Ignore setups-->
+		</FileCreateTime>
+
+	<!--SYSMON EVENT ID 3 : NETWORK CONNECTION INITIATED [NetworkConnect]-->
+		<!--COMMENT:	By default this configuration takes a very conservative approach to network logging, limited to only extremely high-signal events.-->
+		<!--COMMENT:	[ https://attack.mitre.org/wiki/Command_and_Control ] [ https://attack.mitre.org/wiki/Exfiltration ] [ https://attack.mitre.org/wiki/Lateral_Movement ] -->
+		<!--TECHNICAL:	For the DestinationHostname, Sysmon uses the GetNameInfo API, which will often not have any information, and may just be a CDN. This is NOT reliable for filtering.-->
+		<!--TECHNICAL:	For the DestinationPortName, Sysmon uses the GetNameInfo API for the friendly name of ports you see in logs.-->
+		<!--TECHNICAL:	These exe do not initiate their connections, and thus includes do not work in this section: BITSADMIN NLTEST-->
+		
+		<!-- https://www.first.org/resources/papers/conf2017/APT-Log-Analysis-Tracking-Attack-Tools-by-Audit-Policy-and-Sysmon.pdf -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, User, Protocol, Initiated, SourceIsIpv6, SourceIp, SourceHostname, SourcePort, SourcePortName, DestinationIsIpV6, DestinationIp, DestinationHostname, DestinationPort, DestinationPortName-->
+		<NetworkConnect onmatch="exclude">
+		</NetworkConnect>
+
+	<!--SYSMON EVENT ID 4 : RESERVED FOR SYSMON STATUS MESSAGES-->
+		<!--DATA: UtcTime, State, Version, SchemaVersion-->
+		<!--Cannot be filtered.-->
+
+	<!--SYSMON EVENT ID 5 : PROCESS ENDED [ProcessTerminate]-->
+		<!--COMMENT:	Useful data in building infection timelines.-->
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image-->
+		<ProcessTerminate onmatch="include">
+			<Image condition="begin with">C:\Users</Image> <!--Process terminations by user binaries-->
+		</ProcessTerminate>
+
+	<!--SYSMON EVENT ID 6 : DRIVER LOADED INTO KERNEL [DriverLoad]-->
+		<!--COMMENT:	Because drivers with bugs can be used to escalate to kernel permissions, be extremely selective
+			about what you exclude from monitoring. Low event volume, little incentive to exclude.
+			[ https://attack.mitre.org/wiki/Technique/T1014 ] -->
+		<!--TECHNICAL:	Sysmon will check the signing certificate revocation status of any driver you don't exclude.-->
+
+		<!--DATA: UtcTime, ImageLoaded, Hashes, Signed, Signature, SignatureStatus-->
+		<DriverLoad onmatch="exclude">
+			<Signature condition="contains">microsoft</Signature> <!--Exclude signed Microsoft drivers-->
+			<Signature condition="contains">windows</Signature> <!--Exclude signed Microsoft drivers-->
+			<Signature condition="begin with">Intel </Signature> <!--Exclude signed Intel drivers-->
+		</DriverLoad>
+
+	<!--SYSMON EVENT ID 7 : DLL (IMAGE) LOADED BY PROCESS [ImageLoad]-->
+		<!--COMMENT:	Can cause high system load, disabled by default.-->
+		<!--COMMENT:	[ https://attack.mitre.org/wiki/Technique/T1073 ] [ https://attack.mitre.org/wiki/Technique/T1038 ] [ https://attack.mitre.org/wiki/Technique/T1034 ] -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, ImageLoaded, Hashes, Signed, Signature, SignatureStatus-->
+		<ImageLoad onmatch="exclude">
+		</ImageLoad>
+
+	<!--SYSMON EVENT ID 8 : REMOTE THREAD CREATED [CreateRemoteThread]-->
+		<!--COMMENT:	Monitor for processes injecting code into other processes. Often used by malware to cloak their actions. Also when Firefox loads Flash.
+		[ https://attack.mitre.org/wiki/Technique/T1055 ] -->
+
+		<!--DATA: UtcTime, SourceProcessGuid, SourceProcessId, SourceImage, TargetProcessId, TargetImage, NewThreadId, StartAddress, StartModule, StartFunction-->
+		<CreateRemoteThread onmatch="exclude">
+		</CreateRemoteThread>
+
+	<!--SYSMON EVENT ID 9 : RAW DISK ACCESS [RawAccessRead]-->
+		<!--EVENT 9: "RawAccessRead detected"-->
+		<!--COMMENT:	Can cause high system load, disabled by default.-->
+		<!--COMMENT:	Monitor for raw sector-level access to the disk, often used to bypass access control lists or access locked files.
+			Disabled by default since including even one entry here activates this component. Reward/performance/rule maintenance decision.
+			Encourage you to experiment with this feature yourself. [ https://attack.mitre.org/wiki/Technique/T1067 ] -->
+		<!--COMMENT:	You will likely want to set this to a full capture on domain controllers, where no process should be doing raw reads.-->
+
+
+	<!--SYSMON EVENT ID 10 : INTER-PROCESS ACCESS [ProcessAccess]-->
+		<!--EVENT 10: "Process accessed"-->
+		<!--COMMENT:	Can cause high system load, disabled by default.-->
+		<!--COMMENT:	Monitor for processes accessing other process' memory.-->
+
+
+	<!--SYSMON EVENT ID 11 : FILE CREATED [FileCreate]-->
+		<!--EVENT 11: "File created"-->
+		<!--NOTE:	Other filesystem "minifilters" can make it appear to Sysmon that some files are being written twice. This is not a Sysmon issue, per Mark Russinovich.-->
+		<!--NOTE:	You may not see files detected by antivirus. Other filesystem minifilters, like antivirus, can act before Sysmon receives the alert a file was written.-->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, TargetFilename, CreationUtcTime-->
+		<FileCreate onmatch="exclude">
+		</FileCreate>
+
+
+	<!--SYSMON EVENT ID 12 & 13 & 14 : REGISTRY MODIFICATION [RegistryEvent]-->
+		<!--EVENT 12: "Registry object added or deleted"-->
+		<!--EVENT 13: "Registry value set-->
+		<!--EVENT 14: "Registry objected renamed"-->
+
+		<!--NOTE:	Windows writes hundreds or thousands of registry keys a minute, so just because you're not changing things, doesn't mean these rules aren't being run.-->
+		<!--NOTE:	You do not have to spend a lot of time worrying about performance, CPUs are fast, but it's something to consider. Every rule and condition type has a small cost.-->
+		<!--NOTE:	"contains" works by finding the first letter, then matching the second, etc, so the first letters should be as low-occurrence as possible.-->
+		<!--NOTE:	[ https://attack.mitre.org/wiki/Technique/T1112 ] -->
+
+		<!--TECHNICAL:	You cannot filter on the "Details" attribute, due to performance issues when very large keys are written, and variety of data formats-->
+		<!--TECHNICAL:	Possible prefixes are HKLM, HKCR, and HKU-->
+		<!--CRITICAL:	Schema version 3.30 and higher change HKLM\="\REGISTRY\MACHINE\" and HKU\="\REGISTRY\USER\" and HKCR\="\REGISTRY\MACHINE\SOFTWARE\Classes\" and CurrentControlSet="ControlSet001"-->
+		<!--CRITICAL:	Due to a bug, Sysmon versions BEFORE 7.01 may not properly log with the new prefix style for registry keys that was originally introduced in schema version 3.30-->
+		<!--NOTE:	Because Sysmon runs as a service, it has no filtering ability for, or concept of, HKCU or HKEY_CURRENT_USER. Use "contains" or "end with" to get around this limitation-->
+
+		<!-- ! CRITICAL NOTE !:	It may appear this section is MISSING important entries, but SOME RULES MONITOR MANY KEYS, so look VERY CAREFULLY to see if something is already covered.-->
+
+		<!--DATA: EventType, UtcTime, ProcessGuid, ProcessId, Image, TargetObject, Details (can't filter on), NewName (can't filter on)-->
+		<RegistryEvent onmatch="exclude">
+			<!--Autorun or Startups-->
+				<!--ADDITIONAL REFERENCE: [ http://www.ghacks.net/2016/06/04/windows-automatic-startup-locations/ ] -->
+				<!--ADDITIONAL REFERENCE: [ https://view.officeapps.live.com/op/view.aspx?src=https://arsenalrecon.com/downloads/resources/Registry_Keys_Related_to_Autorun.ods ] -->
+				<!--ADDITIONAL REFERENCE: [ http://www.silentrunners.org/launchpoints.html ] -->
+				<!--ADDITIONAL REFERENCE: [ https://www.microsoftpressstore.com/articles/article.aspx?p=2762082&seqNum=2 ] -->
+		</RegistryEvent>
+
+
+	<!--SYSMON EVENT ID 15 : ALTERNATE DATA STREAM CREATED [FileCreateStreamHash]-->
+		<!--EVENT 15: "File stream created"-->
+		<!--COMMENT:	Any files created with an NTFS Alternate Data Stream which match these rules will be hashed and logged.
+			[ https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/ ]
+			ADS's are used by browsers and email clients to mark files as originating from the Internet or other foreign sources.
+			[ https://textslashplain.com/2016/04/04/downloads-and-the-mark-of-the-web/ ] -->
+		<!--NOTE: Other filesystem minifilters can make it appear to Sysmon that some files are being written twice. This is not a Sysmon issue, per Mark Russinovich.-->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, TargetFilename, CreationUtcTime, Hash-->
+		<FileCreateStreamHash onmatch="exclude">
+		</FileCreateStreamHash>
+
+
+	<!--SYSMON EVENT ID 16 : SYSMON CONFIGURATION CHANGE-->
+		<!--EVENT 16: "Sysmon config state changed"-->
+		<!--COMMENT:	This ONLY logs if the hash of the configuration changes. Running "sysmon.exe -c" with the current configuration will not be logged with Event 16-->
+		
+		<!--DATA: UtcTime, Configuration, ConfigurationFileHash-->
+		<!--Cannot be filtered.-->
+
+	<!--SYSMON EVENT ID 17 & 18 : PIPE CREATED / PIPE CONNECTED [PipeEvent]-->
+		<!--EVENT 17: "Pipe Created"-->
+		<!--EVENT 18: "Pipe Connected"-->
+
+		<!--ADDITIONAL REFERENCE: [ https://www.cobaltstrike.com/help-smb-beacon ] -->
+		<!--ADDITIONAL REFERENCE: [ https://blog.cobaltstrike.com/2015/10/07/named-pipe-pivoting/ ] -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, PipeName, Image-->
+		<PipeEvent onmatch="exclude">
+		</PipeEvent>
+
+	<!--SYSMON EVENT ID 19 & 20 & 21 : WMI EVENT MONITORING [WmiEvent]-->
+		<!--EVENT 19: "WmiEventFilter activity detected"-->
+		<!--EVENT 20: "WmiEventConsumer activity detected"-->
+		<!--EVENT 21: "WmiEventConsumerToFilter activity detected"-->
+
+		<!--ADDITIONAL REFERENCE: [ https://www.darkoperator.com/blog/2017/10/15/sysinternals-sysmon-610-tracking-of-permanent-wmi-events ] -->
+		<!--ADDITIONAL REFERENCE: [ https://rawsec.lu/blog/posts/2017/Sep/19/sysmon-v610-vs-wmi-persistence/ ] -->
+
+		<!--DATA: EventType, UtcTime, Operation, User, Name, Type, Destination, Consumer, Filter-->
+		<WmiEvent onmatch="exclude">
+		</WmiEvent>
+
+	<!--SYSMON EVENT ID 255 : ERROR-->
+		<!--"This event is generated when an error occurred within Sysmon. They can happen if the system is under heavy load
+			and certain tasked could not be performed or a bug exists in the Sysmon service. You can report any bugs on the
+			Sysinternals forum or over Twitter (@markrussinovich)."-->
+		<!--Cannot be filtered.-->
+
+	</EventFiltering>
+</Sysmon>

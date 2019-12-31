@@ -1,0 +1,1 @@
+Get-WinEvent -LogName 'Microsoft-Windows-URLMon/Operational' | Out-Host -Paging

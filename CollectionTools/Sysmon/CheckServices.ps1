@@ -1,0 +1,1 @@
+Get-Service sysmon | Format-Table Name, DisplayName, Status

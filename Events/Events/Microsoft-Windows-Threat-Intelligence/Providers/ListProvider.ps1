@@ -1,0 +1,1 @@
+(Get-WinEvent -ListProvider Microsoft-Windows-Threat-Intelligence).Events | Format-Table Id, Description

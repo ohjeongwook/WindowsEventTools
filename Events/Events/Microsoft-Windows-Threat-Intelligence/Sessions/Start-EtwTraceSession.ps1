@@ -1,0 +1,2 @@
+New-EtwTraceSession -Name "ThreatIntelligenceTrace" -LocalFilePath c:\ThreatIntelligenceTrace.etl
+Add-EtwTraceProvider -Guid '{f4e1897c-bb5d-5668-f1d8-040f4d8dd344}' -SessionName "ThreatIntelligenceTrace"

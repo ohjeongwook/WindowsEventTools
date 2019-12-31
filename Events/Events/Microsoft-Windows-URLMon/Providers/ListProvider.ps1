@@ -1,0 +1,1 @@
+(Get-WinEvent -ListProvider Microsoft-Windows-URLMon).Events | Format-Table Id, Description

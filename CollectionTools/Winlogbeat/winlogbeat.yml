@@ -1,0 +1,617 @@
+###################### Winlogbeat Configuration Example ##########################
+
+# This file is an example configuration file highlighting only the most common
+# options. The winlogbeat.reference.yml file from the same directory contains all the
+# supported options with more comments. You can use it as a reference.
+#
+# You can find the full configuration reference here:
+# https://www.elastic.co/guide/en/beats/winlogbeat/index.html
+
+#======================= Winlogbeat specific options ==========================
+
+# event_logs specifies a list of event logs to monitor as well as any
+# accompanying options. The YAML data type of event_logs is a list of
+# dictionaries.
+#
+# The supported keys are name (required), tags, fields, fields_under_root,
+# forwarded, ignore_older, level, event_id, provider, and include_xml. Please
+# visit the documentation for the complete details of each option.
+# https://go.es.io/WinlogbeatConfig
+winlogbeat.event_logs:
+  - name: Application
+  - name: Security
+  - name: System
+  - name: ACEEventLog
+  - name: Application
+  - name: HardwareEvents
+  - name: HP CASL Framework
+  - name: Internet Explorer
+  - name: Key Management Service
+  - name: MSITvSmartcard
+  - name: OAlerts
+  - name: PreEmptive
+  - name: Security
+  - name: System
+  - name: Texus
+  - name: Windows Azure
+  - name: Windows PowerShell
+  - name: Admin
+  - name: ForwardedEvents
+  - name: Microsoft-AppV-Client/Admin
+  - name: Microsoft-AppV-Client/Operational
+  - name: Microsoft-AppV-Client/Virtual Applications
+  - name: Microsoft-Client-Licensing-Platform/Admin
+  - name: Microsoft-Management-UI/Admin
+  - name: Microsoft-Rdms-UI/Admin
+  - name: Microsoft-Rdms-UI/Operational
+  - name: Microsoft-ServiceBus-Client/Admin
+  - name: Microsoft-ServiceBus-Client/Operational
+  - name: Microsoft-SQLServerDataTools/Operational
+  - name: Microsoft-SQLServerDataToolsVS/Operational
+  - name: Microsoft-User Experience Virtualization-Agent Driver/Operational
+  - name: Microsoft-User Experience Virtualization-App Agent/Operational
+  - name: Microsoft-User Experience Virtualization-IPC/Operational
+  - name: Microsoft-User Experience Virtualization-SQM Uploader/Operational
+  - name: Microsoft-Windows-AAD/Operational
+  - name: Microsoft-Windows-All-User-Install-Agent/Admin
+  - name: Microsoft-Windows-AllJoyn/Operational
+  - name: Microsoft-Windows-AppHost/Admin
+  - name: Microsoft-Windows-AppID/Operational
+  - name: Microsoft-Windows-ApplicabilityEngine/Operational
+  - name: Microsoft-Windows-Application Server-Applications/Admin
+  - name: Microsoft-Windows-Application Server-Applications/Operational
+  - name: Microsoft-Windows-Application-Experience/Program-Compatibility-Assistant
+  - name: Microsoft-Windows-Application-Experience/Program-Compatibility-Troubleshooter
+  - name: Microsoft-Windows-Application-Experience/Program-Inventory
+  - name: Microsoft-Windows-Application-Experience/Program-Telemetry
+  - name: Microsoft-Windows-Application-Experience/Steps-Recorder
+  - name: Microsoft-Windows-ApplicationResourceManagementSystem/Operational
+  - name: Microsoft-Windows-AppLocker/EXE and DLL
+  - name: Microsoft-Windows-AppLocker/MSI and Script
+  - name: Microsoft-Windows-AppLocker/Packaged app-Deployment
+  - name: Microsoft-Windows-AppLocker/Packaged app-Execution
+  - name: Microsoft-Windows-AppModel-Runtime/Admin
+  - name: Microsoft-Windows-AppReadiness/Admin
+  - name: Microsoft-Windows-AppReadiness/Operational
+  - name: Microsoft-Windows-AppXDeployment/Operational
+  - name: Microsoft-Windows-AppXDeploymentServer/Operational
+  - name: Microsoft-Windows-AppXDeploymentServer/Restricted
+  - name: Microsoft-Windows-AppxPackaging/Operational
+  - name: Microsoft-Windows-ASN1/Operational
+  - name: Microsoft-Windows-AssignedAccess/Admin
+  - name: Microsoft-Windows-AssignedAccess/Operational
+  - name: Microsoft-Windows-AssignedAccessBroker/Admin
+  - name: Microsoft-Windows-AssignedAccessBroker/Operational
+  - name: Microsoft-Windows-Audio/CaptureMonitor
+  - name: Microsoft-Windows-Audio/GlitchDetection
+  - name: Microsoft-Windows-Audio/Informational
+  - name: Microsoft-Windows-Audio/Operational
+  - name: Microsoft-Windows-Audio/PlaybackManager
+  - name: Microsoft-Windows-Authentication User Interface/Operational
+  - name: Microsoft-Windows-Authentication/AuthenticationPolicyFailures-DomainController
+  - name: Microsoft-Windows-Authentication/ProtectedUser-Client
+  - name: Microsoft-Windows-Authentication/ProtectedUserFailures-DomainController
+  - name: Microsoft-Windows-Authentication/ProtectedUserSuccesses-DomainController
+  - name: Microsoft-Windows-BackgroundTaskInfrastructure/Operational
+  - name: Microsoft-Windows-BackgroundTransfer-ContentPrefetcher/Operational
+  - name: Microsoft-Windows-Backup
+  - name: Microsoft-Windows-Base-Filtering-Engine-Connections/Operational
+  - name: Microsoft-Windows-Base-Filtering-Engine-Resource-Flows/Operational
+  - name: Microsoft-Windows-BestPractices/Operational
+  - name: Microsoft-Windows-Biometrics/Operational
+  - name: Microsoft-Windows-Bits-Client/Analytic
+  - name: Microsoft-Windows-Bits-Client/Operational
+  - name: Microsoft-Windows-Bluetooth-BthLEEnum/Operational
+  - name: Microsoft-Windows-Bluetooth-BthLEPrepairing/Operational
+  - name: Microsoft-Windows-Bluetooth-Bthmini/Operational
+  - name: Microsoft-Windows-Bluetooth-MTPEnum/Operational
+  - name: Microsoft-Windows-Bluetooth-Policy/Operational
+  - name: Microsoft-Windows-BranchCacheSMB/Operational
+  - name: Microsoft-Windows-CAPI2/Operational
+  - name: Microsoft-Windows-CertificateServices-Deployment/Operational
+  - name: Microsoft-Windows-CertificateServicesClient-CredentialRoaming/Operational
+  - name: Microsoft-Windows-CertificateServicesClient-Lifecycle-System/Operational
+  - name: Microsoft-Windows-CertificateServicesClient-Lifecycle-User/Operational
+  - name: Microsoft-Windows-CertPoleEng/Operational
+  - name: Microsoft-Windows-CloudStorageWizard/Operational
+  - name: Microsoft-Windows-CloudStore/Debug
+  - name: Microsoft-Windows-CloudStore/Operational
+  - name: Microsoft-Windows-CodeIntegrity/Operational
+  - name: Microsoft-Windows-Compat-Appraiser/Operational
+  - name: Microsoft-Windows-Containers-BindFlt/Operational
+  - name: Microsoft-Windows-Containers-Wcifs/Operational
+  - name: Microsoft-Windows-Containers-Wcnfs/Operational
+  - name: Microsoft-Windows-CoreApplication/Operational
+  - name: Microsoft-Windows-CorruptedFileRecovery-Client/Operational
+  - name: Microsoft-Windows-CorruptedFileRecovery-Server/Operational
+  - name: Microsoft-Windows-Crypto-DPAPI/BackUpKeySvc
+  - name: Microsoft-Windows-Crypto-DPAPI/Debug
+  - name: Microsoft-Windows-Crypto-DPAPI/Operational
+  - name: Microsoft-Windows-Crypto-NCrypt/Operational
+  - name: Microsoft-Windows-DAL-Provider/Operational
+  - name: Microsoft-Windows-DataIntegrityScan/Admin
+  - name: Microsoft-Windows-DataIntegrityScan/CrashRecovery
+  - name: Microsoft-Windows-DateTimeControlPanel/Operational
+  - name: Microsoft-Windows-DeviceGuard/Operational
+  - name: Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin
+  - name: Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Operational
+  - name: Microsoft-Windows-Devices-Background/Operational
+  - name: Microsoft-Windows-DeviceSetupManager/Admin
+  - name: Microsoft-Windows-DeviceSetupManager/Operational
+  - name: Microsoft-Windows-DeviceSync/Operational
+  - name: Microsoft-Windows-DeviceUpdateAgent/Operational
+  - name: Microsoft-Windows-Dhcp-Client/Admin
+  - name: Microsoft-Windows-Dhcp-Client/Operational
+  - name: Microsoft-Windows-Dhcpv6-Client/Admin
+  - name: Microsoft-Windows-Dhcpv6-Client/Operational
+  - name: Microsoft-Windows-Diagnosis-DPS/Operational
+  - name: Microsoft-Windows-Diagnosis-PCW/Operational
+  - name: Microsoft-Windows-Diagnosis-PLA/Operational
+  - name: Microsoft-Windows-Diagnosis-Scheduled/Operational
+  - name: Microsoft-Windows-Diagnosis-Scripted/Admin
+  - name: Microsoft-Windows-Diagnosis-Scripted/Operational
+  - name: Microsoft-Windows-Diagnosis-ScriptedDiagnosticsProvider/Operational
+  - name: Microsoft-Windows-Diagnostics-Networking/Operational
+  - name: Microsoft-Windows-DirectoryServices-Deployment/Operational
+  - name: Microsoft-Windows-DiskDiagnostic/Operational
+  - name: Microsoft-Windows-DiskDiagnosticDataCollector/Operational
+  - name: Microsoft-Windows-DiskDiagnosticResolver/Operational
+  - name: Microsoft-Windows-DisplayColorCalibration/Operational
+  - name: Microsoft-Windows-DNS-Client/Operational
+  - name: Microsoft-Windows-DnsProxy/Admin
+  - name: Microsoft-Windows-DnsProxy/Operational
+  - name: Microsoft-Windows-DriverFrameworks-UserMode/Operational
+  - name: Microsoft-Windows-DSC/Admin
+  - name: Microsoft-Windows-DSC/Operational
+  - name: Microsoft-Windows-EapHost/Operational
+  - name: Microsoft-Windows-EapMethods-RasChap/Operational
+  - name: Microsoft-Windows-EapMethods-RasTls/Operational
+  - name: Microsoft-Windows-EapMethods-Sim/Operational
+  - name: Microsoft-Windows-EapMethods-Ttls/Operational
+  - name: Microsoft-Windows-EDP-Application-Learning/Admin
+  - name: Microsoft-Windows-EDP-Audit-Regular/Admin
+  - name: Microsoft-Windows-EDP-Audit-TCB/Admin
+  - name: Microsoft-Windows-EmbeddedAppLauncher/Admin
+  - name: Microsoft-Windows-EmbeddedAppLauncher/Operational
+  - name: Microsoft-Windows-Energy-Estimation-Engine/EventLog
+  - name: Microsoft-Windows-EnrollmentPolicyWebService/Admin
+  - name: Microsoft-Windows-EnrollmentWebService/Admin
+  - name: Microsoft-Windows-ESE/Operational
+  - name: Microsoft-Windows-EventCollector/Operational
+  - name: Microsoft-Windows-Fault-Tolerant-Heap/Operational
+  - name: Microsoft-Windows-FederationServices-Deployment/Operational
+  - name: Microsoft-Windows-FileServices-ServerManager-EventProvider/Admin
+  - name: Microsoft-Windows-FileServices-ServerManager-EventProvider/Operational
+  - name: Microsoft-Windows-FileShareShadowCopyProvider/Operational
+  - name: Microsoft-Windows-FMS/Operational
+  - name: Microsoft-Windows-Folder Redirection/Operational
+  - name: Microsoft-Windows-Forwarding/Operational
+  - name: Microsoft-Windows-GenericRoaming/Admin
+  - name: Microsoft-Windows-glcnd/Admin
+  - name: Microsoft-Windows-GroupPolicy/Operational
+  - name: Microsoft-Windows-HelloForBusiness/Operational
+  - name: Microsoft-Windows-Help/Operational
+  - name: Microsoft-Windows-HomeGroup Control Panel/Operational
+  - name: Microsoft-Windows-Host-Network-Service-Admin
+  - name: Microsoft-Windows-Host-Network-Service-Operational
+  - name: Microsoft-Windows-HostGuardianClient-Service/Admin
+  - name: Microsoft-Windows-HostGuardianClient-Service/Operational
+  - name: Microsoft-Windows-HostGuardianService-CA/Admin
+  - name: Microsoft-Windows-HostGuardianService-CA/Operational
+  - name: Microsoft-Windows-HostGuardianService-Client/Admin
+  - name: Microsoft-Windows-HostGuardianService-Client/Operational
+  - name: Microsoft-Windows-HttpService/Log
+  - name: Microsoft-Windows-HttpService/Trace
+  - name: Microsoft-Windows-Hyper-V-Compute-Admin
+  - name: Microsoft-Windows-Hyper-V-Compute-Operational
+  - name: Microsoft-Windows-Hyper-V-Config-Admin
+  - name: Microsoft-Windows-Hyper-V-Config-Operational
+  - name: Microsoft-Windows-Hyper-V-Guest-Drivers/Admin
+  - name: Microsoft-Windows-Hyper-V-Guest-Drivers/Operational
+  - name: Microsoft-Windows-Hyper-V-Hypervisor-Admin
+  - name: Microsoft-Windows-Hyper-V-Hypervisor-Operational
+  - name: Microsoft-Windows-Hyper-V-StorageVSP-Admin
+  - name: Microsoft-Windows-Hyper-V-VID-Admin
+  - name: Microsoft-Windows-Hyper-V-VMMS-Admin
+  - name: Microsoft-Windows-Hyper-V-VMMS-Networking
+  - name: Microsoft-Windows-Hyper-V-VMMS-Operational
+  - name: Microsoft-Windows-Hyper-V-VMMS-Storage
+  - name: Microsoft-Windows-Hyper-V-VMSP-Admin
+  - name: Microsoft-Windows-Hyper-V-VmSwitch-Operational
+  - name: Microsoft-Windows-Hyper-V-Worker-Admin
+  - name: Microsoft-Windows-Hyper-V-Worker-Operational
+  - name: Microsoft-Windows-IdCtrls/Operational
+  - name: Microsoft-Windows-IKE/Operational
+  - name: Microsoft-Windows-International-RegionalOptionsControlPanel/Operational
+  - name: Microsoft-Windows-International/Operational
+  - name: Microsoft-Windows-Iphlpsvc/Operational
+  - name: Microsoft-Windows-KdsSvc/Operational
+  - name: Microsoft-Windows-Kerberos-KdcProxy/Operational
+  - name: Microsoft-Windows-Kerberos/Operational
+  - name: Microsoft-Windows-Kernel-ApphelpCache/Operational
+  - name: Microsoft-Windows-Kernel-Boot/Operational
+  - name: Microsoft-Windows-Kernel-EventTracing/Admin
+  - name: Microsoft-Windows-Kernel-IO/Operational
+  - name: Microsoft-Windows-Kernel-PnP/Configuration
+  - name: Microsoft-Windows-Kernel-Power/Thermal-Operational
+  - name: Microsoft-Windows-Kernel-ShimEngine/Operational
+  - name: Microsoft-Windows-Kernel-StoreMgr/Operational
+  - name: Microsoft-Windows-Kernel-WDI/Operational
+  - name: Microsoft-Windows-Kernel-WHEA/Errors
+  - name: Microsoft-Windows-Kernel-WHEA/Operational
+  - name: Microsoft-Windows-Known Folders API Service
+  - name: Microsoft-Windows-LanguagePackSetup/Operational
+  - name: Microsoft-Windows-LinkLayerDiscoveryProtocol/Operational
+  - name: Microsoft-Windows-LiveId/Operational
+  - name: Microsoft-Windows-LSA/Operational
+  - name: Microsoft-Windows-ManagementTools-RegistryProvider/Operational
+  - name: Microsoft-Windows-ManagementTools-TaskManagerProvider/Operational
+  - name: Microsoft-Windows-MediaFoundation-Performance/SARStreamResource
+  - name: Microsoft-Windows-MemoryDiagnostics-Results/Debug
+  - name: Microsoft-Windows-MiStreamProvider/Operational
+  - name: Microsoft-Windows-Mobile-Broadband-Experience-Parser-Task/Operational
+  - name: Microsoft-Windows-Mobile-Broadband-Experience-SmsRouter/Admin
+  - name: Microsoft-Windows-Mprddm/Operational
+  - name: Microsoft-Windows-MsLbfoProvider/Operational
+  - name: Microsoft-Windows-MSPaint/Admin
+  - name: Microsoft-Windows-MUI/Admin
+  - name: Microsoft-Windows-MUI/Operational
+  - name: Microsoft-Windows-Ncasvc/Operational
+  - name: Microsoft-Windows-NCSI/Operational
+  - name: Microsoft-Windows-NDIS/Operational
+  - name: Microsoft-Windows-NdisImPlatform/Operational
+  - name: Microsoft-Windows-NetworkController-NcHostAgent-Admin
+  - name: Microsoft-Windows-NetworkLocationWizard/Operational
+  - name: Microsoft-Windows-NetworkProfile/Operational
+  - name: Microsoft-Windows-NetworkProvider/Operational
+  - name: Microsoft-Windows-NlaSvc/Operational
+  - name: Microsoft-Windows-Ntfs/Operational
+  - name: Microsoft-Windows-Ntfs/WHC
+  - name: Microsoft-Windows-NTLM/Operational
+  - name: Microsoft-Windows-OfflineFiles/Operational
+  - name: Microsoft-Windows-OneBackup/Debug
+  - name: Microsoft-Windows-OneX/Operational
+  - name: Microsoft-Windows-OOBE-Machine-DUI/Operational
+  - name: Microsoft-Windows-OtpCredentialProvider/Operational
+  - name: Microsoft-Windows-PackageStateRoaming/Operational
+  - name: Microsoft-Windows-Partition/Diagnostic
+  - name: Microsoft-Windows-PerceptionRuntime/Operational
+  - name: Microsoft-Windows-PerceptionSensorDataService/Operational
+  - name: Microsoft-Windows-PersistentMemory-Nvdimm/Operational
+  - name: Microsoft-Windows-PersistentMemory-PmemDisk/Operational
+  - name: Microsoft-Windows-PersistentMemory-ScmBus/Certification
+  - name: Microsoft-Windows-PersistentMemory-ScmBus/Operational
+  - name: Microsoft-Windows-Policy/Operational
+  - name: Microsoft-Windows-PowerShell-DesiredStateConfiguration-FileDownloadManager/Operational
+  - name: Microsoft-Windows-PowerShell/Admin
+  - name: Microsoft-Windows-PowerShell/Operational
+  - name: Microsoft-Windows-PrintBRM/Admin
+  - name: Microsoft-Windows-PrintService/Admin
+  - name: Microsoft-Windows-PrintService/Operational
+  - name: Microsoft-Windows-PriResources-Deployment/Operational
+  - name: Microsoft-Windows-Program-Compatibility-Assistant/Analytic
+  - name: Microsoft-Windows-Program-Compatibility-Assistant/CompatAfterUpgrade
+  - name: Microsoft-Windows-Proximity-Common/Diagnostic
+  - name: Microsoft-Windows-PushNotification-Platform/Admin
+  - name: Microsoft-Windows-PushNotification-Platform/Operational
+  - name: Microsoft-Windows-RasAgileVpn/Operational
+  - name: Microsoft-Windows-ReadyBoost/Operational
+  - name: Microsoft-Windows-ReFS/Operational
+  - name: Microsoft-Windows-Regsvr32/Operational
+  - name: Microsoft-Windows-RemoteApp and Desktop Connections/Admin
+  - name: Microsoft-Windows-RemoteApp and Desktop Connections/Operational
+  - name: Microsoft-Windows-RemoteDesktopServices-RemoteFX-Manager/Admin
+  - name: Microsoft-Windows-RemoteDesktopServices-RemoteFX-Manager/Operational
+  - name: Microsoft-Windows-RemoteDesktopServices-RemoteFX-Synth3dvsc/Admin
+  - name: Microsoft-Windows-RemoteDesktopServices-RemoteFX-Synth3dvsp/Admin
+  - name: Microsoft-Windows-RemoteDesktopServices-SessionServices/Operational
+  - name: Microsoft-Windows-Remotefs-Rdbss/Operational
+  - name: Microsoft-Windows-Resource-Exhaustion-Detector/Operational
+  - name: Microsoft-Windows-Resource-Exhaustion-Resolver/Operational
+  - name: Microsoft-Windows-RestartManager/Operational
+  - name: Microsoft-Windows-RRAS/Operational
+  - name: Microsoft-Windows-ScmBus/Certification
+  - name: Microsoft-Windows-ScmBus/Operational
+  - name: Microsoft-Windows-ScmDisk0101/Operational
+  - name: Microsoft-Windows-SDDC-Management/Admin
+  - name: Microsoft-Windows-SDDC-Management/Operational
+  - name: Microsoft-Windows-SearchUI/Operational
+  - name: Microsoft-Windows-Security-Adminless/Operational
+  - name: Microsoft-Windows-Security-Audit-Configuration-Client/Operational
+  - name: Microsoft-Windows-Security-EnterpriseData-FileRevocationManager/Operational
+  - name: Microsoft-Windows-Security-ExchangeActiveSyncProvisioning/Operational
+  - name: Microsoft-Windows-Security-IdentityListener/Operational
+  - name: Microsoft-Windows-Security-LessPrivilegedAppContainer/Operational
+  - name: Microsoft-Windows-Security-Mitigations/KernelMode
+  - name: Microsoft-Windows-Security-Mitigations/UserMode
+  - name: Microsoft-Windows-Security-Netlogon/Operational
+  - name: Microsoft-Windows-Security-SPP-UX-GenuineCenter-Logging/Operational
+  - name: Microsoft-Windows-Security-SPP-UX-Notifications/ActionCenter
+  - name: Microsoft-Windows-Security-UserConsentVerifier/Audit
+  - name: Microsoft-Windows-SecurityMitigationsBroker/Admin
+  - name: Microsoft-Windows-SecurityMitigationsBroker/Operational
+  - name: Microsoft-Windows-SENSE/Operational
+  - name: Microsoft-Windows-SenseIR/Operational
+  - name: Microsoft-Windows-ServerEssentials-Deployment/Deploy
+  - name: Microsoft-Windows-ServerManager-ConfigureSMRemoting/Operational
+  - name: Microsoft-Windows-ServerManager-DeploymentProvider/Operational
+  - name: Microsoft-Windows-ServerManager-MgmtProvider/Operational
+  - name: Microsoft-Windows-ServerManager-MultiMachine/Admin
+  - name: Microsoft-Windows-ServerManager-MultiMachine/Operational
+  - name: Microsoft-Windows-ServiceReportingApi/Debug
+  - name: Microsoft-Windows-SettingSync-Azure/Debug
+  - name: Microsoft-Windows-SettingSync-Azure/Operational
+  - name: Microsoft-Windows-SettingSync-OneDrive/Debug
+  - name: Microsoft-Windows-SettingSync-OneDrive/Operational
+  - name: Microsoft-Windows-SettingSync/Debug
+  - name: Microsoft-Windows-SettingSync/Operational
+  - name: Microsoft-Windows-Shell-ConnectedAccountState/ActionCenter
+  - name: Microsoft-Windows-Shell-Core/ActionCenter
+  - name: Microsoft-Windows-Shell-Core/AppDefaults
+  - name: Microsoft-Windows-Shell-Core/LogonTasksChannel
+  - name: Microsoft-Windows-Shell-Core/Operational
+  - name: Microsoft-Windows-ShellCommon-StartLayoutPopulation/Operational
+  - name: Microsoft-Windows-SilProvider/Operational
+  - name: Microsoft-Windows-SmartCard-Audit/Authentication
+  - name: Microsoft-Windows-SmartCard-DeviceEnum/Operational
+  - name: Microsoft-Windows-SmartCard-TPM-VCard-Module/Admin
+  - name: Microsoft-Windows-SmartCard-TPM-VCard-Module/Operational
+  - name: Microsoft-Windows-SmartScreen/Debug
+  - name: Microsoft-Windows-SmbClient/Audit
+  - name: Microsoft-Windows-SmbClient/Connectivity
+  - name: Microsoft-Windows-SMBClient/Operational
+  - name: Microsoft-Windows-SmbClient/Security
+  - name: Microsoft-Windows-SMBDirect/Admin
+  - name: Microsoft-Windows-SMBServer/Audit
+  - name: Microsoft-Windows-SMBServer/Connectivity
+  - name: Microsoft-Windows-SMBServer/Operational
+  - name: Microsoft-Windows-SMBServer/Security
+  - name: Microsoft-Windows-SMBWitnessClient/Admin
+  - name: Microsoft-Windows-SMBWitnessClient/Informational
+  - name: Microsoft-Windows-StateRepository/Operational
+  - name: Microsoft-Windows-StateRepository/Restricted
+  - name: Microsoft-Windows-Storage-ATAPort/Admin
+  - name: Microsoft-Windows-Storage-ATAPort/Operational
+  - name: Microsoft-Windows-Storage-ClassPnP/Admin
+  - name: Microsoft-Windows-Storage-ClassPnP/Operational
+  - name: Microsoft-Windows-Storage-Disk/Admin
+  - name: Microsoft-Windows-Storage-Disk/Operational
+  - name: Microsoft-Windows-Storage-Storport/Admin
+  - name: Microsoft-Windows-Storage-Storport/Health
+  - name: Microsoft-Windows-Storage-Storport/Operational
+  - name: Microsoft-Windows-Storage-Tiering/Admin
+  - name: Microsoft-Windows-StorageManagement/Operational
+  - name: Microsoft-Windows-StorageSpaces-Driver/Diagnostic
+  - name: Microsoft-Windows-StorageSpaces-Driver/Operational
+  - name: Microsoft-Windows-StorageSpaces-ManagementAgent/WHC
+  - name: Microsoft-Windows-StorageSpaces-SpaceManager/Diagnostic
+  - name: Microsoft-Windows-StorageSpaces-SpaceManager/Operational
+  - name: Microsoft-Windows-Sysmon/Operational
+  - name: Microsoft-Windows-SystemSettingsThreshold/Operational
+  - name: Microsoft-Windows-TaskScheduler/Maintenance
+  - name: Microsoft-Windows-TaskScheduler/Operational
+  - name: Microsoft-Windows-TCPIP/Operational
+  - name: Microsoft-Windows-TerminalServices-ClientUSBDevices/Admin
+  - name: Microsoft-Windows-TerminalServices-ClientUSBDevices/Operational
+  - name: Microsoft-Windows-TerminalServices-LocalSessionManager/Admin
+  - name: Microsoft-Windows-TerminalServices-LocalSessionManager/Operational
+  - name: Microsoft-Windows-TerminalServices-PnPDevices/Admin
+  - name: Microsoft-Windows-TerminalServices-PnPDevices/Operational
+  - name: Microsoft-Windows-TerminalServices-Printers/Admin
+  - name: Microsoft-Windows-TerminalServices-Printers/Operational
+  - name: Microsoft-Windows-TerminalServices-RDPClient/Operational
+  - name: Microsoft-Windows-TerminalServices-RemoteConnectionManager/Admin
+  - name: Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational
+  - name: Microsoft-Windows-TerminalServices-ServerUSBDevices/Admin
+  - name: Microsoft-Windows-TerminalServices-ServerUSBDevices/Operational
+  - name: Microsoft-Windows-TerminalServices-SessionBroker-Client/Admin
+  - name: Microsoft-Windows-TerminalServices-SessionBroker-Client/Operational
+  - name: Microsoft-Windows-TerminalServices-TSV-VmHostAgent/Admin
+  - name: Microsoft-Windows-TerminalServices-TSV-VmHostAgent/Operational
+  - name: Microsoft-Windows-Time-Service-PTP-Provider/PTP-Operational
+  - name: Microsoft-Windows-Time-Service/Operational
+  - name: Microsoft-Windows-TWinUI/Operational
+  - name: Microsoft-Windows-TZSync/Operational
+  - name: Microsoft-Windows-TZUtil/Operational
+  - name: Microsoft-Windows-UAC-FileVirtualization/Operational
+  - name: Microsoft-Windows-UAC/Operational
+  - name: Microsoft-Windows-UniversalTelemetryClient/Operational
+  - name: Microsoft-Windows-User Control Panel/Operational
+  - name: Microsoft-Windows-User Device Registration/Admin
+  - name: Microsoft-Windows-User Profile Service/Operational
+  - name: Microsoft-Windows-User-Loader/Operational
+  - name: Microsoft-Windows-UserPnp/ActionCenter
+  - name: Microsoft-Windows-UserPnp/DeviceInstall
+  - name: Microsoft-Windows-VDRVROOT/Operational
+  - name: Microsoft-Windows-VerifyHardwareSecurity/Admin
+  - name: Microsoft-Windows-VerifyHardwareSecurity/Operational
+  - name: Microsoft-Windows-VHDMP-Operational
+  - name: Microsoft-Windows-Volume/Diagnostic
+  - name: Microsoft-Windows-VolumeSnapshot-Driver/Operational
+  - name: Microsoft-Windows-VPN-Client/Operational
+  - name: Microsoft-Windows-VPN/Operational
+  - name: Microsoft-Windows-Wcmsvc/Operational
+  - name: Microsoft-Windows-WebAuth/Operational
+  - name: Microsoft-Windows-WebAuthN/Operational
+  - name: Microsoft-Windows-WebDeploy/ConnectionInfo
+  - name: Microsoft-Windows-WebDeploy/Debug
+  - name: Microsoft-Windows-WebDeploy/Error
+  - name: Microsoft-Windows-WebDeploy/Info
+  - name: Microsoft-Windows-WebDeploy/Verbose
+  - name: Microsoft-Windows-WebDeploy/Warning
+  - name: Microsoft-Windows-WebIO-NDF/Diagnostic
+  - name: Microsoft-Windows-WEPHOSTSVC/Operational
+  - name: Microsoft-Windows-WER-PayloadHealth/Operational
+  - name: Microsoft-Windows-WFP/Operational
+  - name: Microsoft-Windows-Win32k/Operational
+  - name: Microsoft-Windows-Windows Firewall With Advanced Security/ConnectionSecurity
+  - name: Microsoft-Windows-Windows Firewall With Advanced Security/ConnectionSecurityVerbose
+  - name: Microsoft-Windows-Windows Firewall With Advanced Security/Firewall
+  - name: Microsoft-Windows-Windows Firewall With Advanced Security/FirewallDiagnostics
+  - name: Microsoft-Windows-Windows Firewall With Advanced Security/FirewallVerbose
+  - name: Microsoft-Windows-WindowsColorSystem/Operational
+  - name: Microsoft-Windows-WindowsSystemAssessmentTool/Operational
+  - name: Microsoft-Windows-WindowsUIImmersive/Operational
+  - name: Microsoft-Windows-WindowsUpdateClient/Operational
+  - name: Microsoft-Windows-WinHTTP-NDF/Diagnostic
+  - name: Microsoft-Windows-WinINet-Capture/Analytic
+  - name: Microsoft-Windows-WinINet-Config/ProxyConfigChanged
+  - name: Microsoft-Windows-Winlogon/Operational
+  - name: Microsoft-Windows-WinNat/Oper
+  - name: Microsoft-Windows-WinRM/Operational
+  - name: Microsoft-Windows-Winsock-AFD/Operational
+  - name: Microsoft-Windows-Winsock-NameResolution/Operational
+  - name: Microsoft-Windows-Winsock-WS2HELP/Operational
+  - name: Microsoft-Windows-Wired-AutoConfig/Operational
+  - name: Microsoft-Windows-WLAN-AutoConfig/Operational
+  - name: Microsoft-Windows-WMI-Activity/Operational
+  - name: Microsoft-Windows-WMPNSS-Service/Operational
+  - name: Microsoft-Windows-Wordpad/Admin
+  - name: Microsoft-Windows-Workplace Join/Admin
+  - name: Microsoft-Windows-WPD-ClassInstaller/Operational
+  - name: Microsoft-Windows-WPD-CompositeClassDriver/Operational
+  - name: Microsoft-Windows-WPD-MTPClassDriver/Operational
+  - name: Network Isolation Operational
+  - name: OpenSSH/Admin
+  - name: OpenSSH/Operational
+  - name: RemoteDesktopServices-RemoteFX-SessionLicensing-Admin
+  - name: RemoteDesktopServices-RemoteFX-SessionLicensing-Operational
+  - name: Setup
+  - name: SMSApi
+  - name: Windows Networking Vpn Plugin Platform/Operational
+  - name: Windows Networking Vpn Plugin Platform/OperationalVerbose
+
+#==================== Elasticsearch template setting ==========================
+
+setup.template.settings:
+  index.number_of_shards: 1
+  #index.codec: best_compression
+  #_source.enabled: false
+
+#================================ General =====================================
+
+# The name of the shipper that publishes the network data. It can be used to group
+# all the transactions sent by a single shipper in the web interface.
+#name:
+
+# The tags of the shipper are included in their own field with each
+# transaction published.
+#tags: ["service-X", "web-tier"]
+
+# Optional fields that you can specify to add additional information to the
+# output.
+#fields:
+#  env: staging
+
+
+#============================== Dashboards =====================================
+# These settings control loading the sample dashboards to the Kibana index. Loading
+# the dashboards is disabled by default and can be enabled either by setting the
+# options here or by using the `setup` command.
+#setup.dashboards.enabled: false
+
+# The URL from where to download the dashboards archive. By default this URL
+# has a value which is computed based on the Beat name and version. For released
+# versions, this URL points to the dashboard archive on the artifacts.elastic.co
+# website.
+#setup.dashboards.url:
+
+#============================== Kibana =====================================
+
+# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# This requires a Kibana endpoint configuration.
+setup.kibana:
+
+  # Kibana Host
+  # Scheme and port can be left out and will be set to the default (http and 5601)
+  # In case you specify and additional path, the scheme is required: http://localhost:5601/path
+  # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
+  #host: "localhost:5601"
+
+  # Kibana Space ID
+  # ID of the Kibana Space into which the dashboards should be loaded. By default,
+  # the Default Space will be used.
+  #space.id:
+
+#============================= Elastic Cloud ==================================
+
+# These settings simplify using winlogbeat with the Elastic Cloud (https://cloud.elastic.co/).
+
+# The cloud.id setting overwrites the `output.elasticsearch.hosts` and
+# `setup.kibana.host` options.
+# You can find the `cloud.id` in the Elastic Cloud web UI.
+#cloud.id:
+
+# The cloud.auth setting overwrites the `output.elasticsearch.username` and
+# `output.elasticsearch.password` settings. The format is `<user>:<pass>`.
+#cloud.auth:
+
+#================================ Outputs =====================================
+
+# Configure what output to use when sending the data collected by the beat.
+
+#-------------------------- Elasticsearch output ------------------------------
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["NEWSTARTBASE:9200"]
+
+  # Optional protocol and basic auth credentials.
+  #protocol: "https"
+  #username: "elastic"
+  #password: "changeme"
+
+#----------------------------- Logstash output --------------------------------
+#output.logstash:
+  # The Logstash hosts
+  #hosts: ["localhost:5044"]
+
+  # Optional SSL. By default is off.
+  # List of root certificates for HTTPS server verifications
+  #ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
+
+  # Certificate for SSL client authentication
+  #ssl.certificate: "/etc/pki/client/cert.pem"
+
+  # Client Certificate Key
+  #ssl.key: "/etc/pki/client/cert.key"
+
+#================================ Processors =====================================
+
+# Configure processors to enhance or manipulate events generated by the beat.
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+#================================ Logging =====================================
+
+# https://www.elastic.co/guide/en/beats/winlogbeat/current/configuration-logging.html
+# Sets log level. The default log level is info.
+# Available log levels are: error, warning, info, debug
+logging.level: info
+logging.to_eventlog: true
+
+# At debug level, you can selectively enable logging only for some components.
+# To enable all selectors use ["*"]. Examples of other selectors are "beat",
+# "publish", "service".
+#logging.selectors: ["*"]
+
+#============================== Xpack Monitoring ===============================
+# winlogbeat can export internal metrics to a central Elasticsearch monitoring
+# cluster.  This requires xpack monitoring to be enabled in Elasticsearch.  The
+# reporting is disabled by default.
+
+# Set to true to enable the monitoring reporter.
+#xpack.monitoring.enabled: false
+
+# Uncomment to send the metrics to Elasticsearch. Most settings from the
+# Elasticsearch output are accepted here as well. Any setting that is not set is
+# automatically inherited from the Elasticsearch output configuration, so if you
+# have the Elasticsearch output configured, you can simply uncomment the
+# following line.
+#xpack.monitoring.elasticsearch:
+
+#================================= Migration ==================================
+
+# This allows to enable 6.7 migration aliases
+#migration.6_to_7.enabled: true

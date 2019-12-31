@@ -1,0 +1,1 @@
+logman stop TITrace -ets

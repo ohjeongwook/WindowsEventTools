@@ -1,0 +1,1 @@
+(Get-WinEvent -ListProvider Microsoft-Windows-Kernel-Process).Events | Format-Table Id, Description

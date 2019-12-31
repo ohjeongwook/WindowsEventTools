@@ -1,0 +1,1 @@
+Remove-EtwTraceSession -Name "ThreatIntelligenceTrace"

@@ -1,0 +1,2 @@
+logman query -ets
+pause

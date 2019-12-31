@@ -1,0 +1,1 @@
+Get-Service winlogbeat | Format-Table Name, DisplayName, Status

@@ -1,0 +1,378 @@
+PS E:\matt\SecurityBigDataMachineLearning\SecurityBigDataMachineLearningWindowsEvent\Microsoft-Windows-Threat-Intelligence> .\New-WinEvent.ps1
+WARNING: Provided payload does not match with the template that was defined for event id 1.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="RegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="AllocationType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ProtectionMask" inType="win:UInt32" outType="xs:unsignedInt"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 2.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="RegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ProtectionMask" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="LastProtectionMask" inType="win:UInt32" outType="xs:unsignedInt"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 3.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ViewSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="AllocationType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ProtectionMask" inType="win:UInt32" outType="xs:unsignedInt"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 4.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="OperationStatus" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="TargetThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="ApcRoutine" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument1" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument2" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument3" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcRoutineVadQueryResult" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="ApcRoutineVadAllocationBase" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcRoutineVadAllocationProtect" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ApcRoutineVadRegionType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ApcRoutineVadRegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcRoutineVadCommitSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcRoutineVadMmfName" inType="win:UnicodeString" outType="xs:string"/>
+  <data name="ApcArgument1VadQueryResult" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="ApcArgument1VadAllocationBase" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument1VadAllocationProtect" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ApcArgument1VadRegionType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ApcArgument1VadRegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument1VadCommitSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument1VadMmfName" inType="win:UnicodeString" outType="xs:string"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 5.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="OperationStatus" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="TargetThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="ContextMask" inType="win:UInt16" outType="win:HexInt16"/>
+  <data name="Pc" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Sp" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Lr" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Fp" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg0" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg1" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg2" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg3" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg4" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg5" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg6" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg7" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="PcVadQueryResult" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="PcVadAllocationBase" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="PcVadAllocationProtect" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="PcVadRegionType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="PcVadRegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="PcVadCommitSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="PcVadMmfName" inType="win:UnicodeString" outType="xs:string"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 6.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="RegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="AllocationType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ProtectionMask" inType="win:UInt32" outType="xs:unsignedInt"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 7.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="RegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ProtectionMask" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="LastProtectionMask" inType="win:UInt32" outType="xs:unsignedInt"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 8.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ViewSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="AllocationType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ProtectionMask" inType="win:UInt32" outType="xs:unsignedInt"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 9.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="OperationStatus" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="TargetThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="ApcRoutine" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument1" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument2" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument3" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcRoutineVadQueryResult" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="ApcRoutineVadAllocationBase" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcRoutineVadAllocationProtect" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ApcRoutineVadRegionType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ApcRoutineVadRegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcRoutineVadCommitSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcRoutineVadMmfName" inType="win:UnicodeString" outType="xs:string"/>
+  <data name="ApcArgument1VadQueryResult" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="ApcArgument1VadAllocationBase" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument1VadAllocationProtect" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ApcArgument1VadRegionType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="ApcArgument1VadRegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument1VadCommitSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="ApcArgument1VadMmfName" inType="win:UnicodeString" outType="xs:string"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 10.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="OperationStatus" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="TargetThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="ContextMask" inType="win:UInt16" outType="win:HexInt16"/>
+  <data name="Pc" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Sp" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Lr" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Fp" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg0" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg1" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg2" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg3" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg4" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg5" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg6" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="Reg7" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="PcVadQueryResult" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="PcVadAllocationBase" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="PcVadAllocationProtect" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="PcVadRegionType" inType="win:UInt32" outType="xs:unsignedInt"/>
+  <data name="PcVadRegionSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="PcVadCommitSize" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="PcVadMmfName" inType="win:UnicodeString" outType="xs:string"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 11.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="OperationStatus" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="BytesCopied" inType="win:Pointer" outType="win:HexInt64"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 12.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="OperationStatus" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="BytesCopied" inType="win:Pointer" outType="win:HexInt64"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 13.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="OperationStatus" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="BytesCopied" inType="win:Pointer" outType="win:HexInt64"/>
+</template>
+WARNING: Provided payload does not match with the template that was defined for event id 14.
+The defined template is following:
+<template xmlns="http://schemas.microsoft.com/win/2004/08/events">
+  <data name="OperationStatus" inType="win:UInt32" outType="win:NTStatus"/>
+  <data name="CallingProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="CallingProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="CallingProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="CallingProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="CallingThreadId" inType="win:UInt32" outType="win:TID"/>
+  <data name="CallingThreadCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessId" inType="win:UInt32" outType="win:PID"/>
+  <data name="TargetProcessCreateTime" inType="win:FILETIME" outType="xs:dateTime"/>
+  <data name="TargetProcessStartKey" inType="win:UInt64" outType="xs:unsignedLong"/>
+  <data name="TargetProcessSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessSectionSignatureLevel" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="TargetProcessProtection" inType="win:UInt8" outType="xs:unsignedByte"/>
+  <data name="BaseAddress" inType="win:Pointer" outType="win:HexInt64"/>
+  <data name="BytesCopied" inType="win:Pointer" outType="win:HexInt64"/>
+</template>
+PS E:\matt\SecurityBigDataMachineLearning\SecurityBigDataMachineLearningWindowsEvent\Microsoft-Windows-Threat-Intelligence>

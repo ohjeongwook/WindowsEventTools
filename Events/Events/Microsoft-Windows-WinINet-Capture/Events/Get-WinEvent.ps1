@@ -1,0 +1,1 @@
+Get-WinEvent -LogName 'Microsoft-Windows-WinINet-Capture/Analytic' | Out-Host -Paging

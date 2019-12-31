@@ -1,0 +1,30 @@
+
+Provider                                 GUID
+-------------------------------------------------------------------------------
+Microsoft-Windows-Kernel-Process         {22FB2CD6-0E7B-422B-A0C7-2FAD1FD0E716}
+
+Value               Keyword              Description
+-------------------------------------------------------------------------------
+0x0000000000000010  WINEVENT_KEYWORD_PROCESS 
+0x0000000000000020  WINEVENT_KEYWORD_THREAD 
+0x0000000000000040  WINEVENT_KEYWORD_IMAGE 
+0x0000000000000080  WINEVENT_KEYWORD_CPU_PRIORITY 
+0x0000000000000100  WINEVENT_KEYWORD_OTHER_PRIORITY 
+0x0000000000000200  WINEVENT_KEYWORD_PROCESS_FREEZE 
+0x0000000000000400  WINEVENT_KEYWORD_JOB 
+0x0000000000000800  WINEVENT_KEYWORD_ENABLE_PROCESS_TRACING_CALLBACKS 
+0x0000000000001000  WINEVENT_KEYWORD_JOB_IO 
+0x0000000000002000  WINEVENT_KEYWORD_WORK_ON_BEHALF 
+0x0000000000004000  WINEVENT_KEYWORD_JOB_SILO 
+0x8000000000000000  Microsoft-Windows-Kernel-Process/Analytic 
+
+Value               Level                Description
+-------------------------------------------------------------------------------
+0x04                win:Informational    Information 
+
+PID                 Image                
+-------------------------------------------------------------------------------
+0x00000000                               
+
+
+The command completed successfully.

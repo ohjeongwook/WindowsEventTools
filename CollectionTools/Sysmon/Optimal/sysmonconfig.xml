@@ -1,0 +1,327 @@
+<Sysmon schemaversion="4.00">
+	<!--SYSMON META CONFIG-->
+	<HashAlgorithms>md5,sha256</HashAlgorithms> <!-- Both MD5 and SHA256 are the industry-standard algorithms for identifying files -->
+	<CheckRevocation/> <!-- Check loaded drivers, log if their code-signing certificate has been revoked, in case malware stole one to sign a kernel driver -->
+
+	<!-- <ImageLoad/> --> <!-- Would manually force-on ImageLoad monitoring, even without configuration below. Included only documentation. -->
+	<!-- <ProcessAccessConfig/> --> <!-- Would manually force-on ProcessAccess monitoring, even without configuration below. Included only documentation. -->
+	<!-- <PipeMonitoringConfig/> --> <!-- Would manually force-on PipeCreated / PipeConnected events, even without configuration below. Included only documentation. -->
+	<EventFiltering>
+	<!--SYSMON EVENT ID 1 : PROCESS CREATION [ProcessCreate]-->
+		<!--COMMENT:	All process launched will be included, except for what matches a rule below. It's best to be as specific as possible, to
+			avoid user-mode executables imitating other process names to avoid logging, or if malware drops files in an existing directory.
+			Ultimately, you must weigh CPU time checking many detailed rules, against the risk of malware exploiting the blindness created.
+			Beware of Masquerading, where attackers imitate the names and paths of legitimate tools. Ideally, you'd use both file path and
+			code signatures to validate, but Sysmon does not support that. Look into Windows Device Guard for whitelisting support. -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessID, Image, FileVersion, Description, Product, Company, CommandLine, CurrentDirectory, User, LogonGuid, LogonId, TerminalSessionId, IntegrityLevel, Hashes, ParentProcessGuid, ParentProcessId, ParentImage, ParentCommandLine-->
+		<ProcessCreate onmatch="exclude">
+		</ProcessCreate>
+
+	<!--SYSMON EVENT ID 2 : FILE CREATION TIME RETROACTIVELY CHANGED IN THE FILESYSTEM [FileCreateTime]-->
+		<!--COMMENT:	[ https://attack.mitre.org/wiki/Technique/T1099 ] -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, TargetFilename, CreationUtcTime, PreviousCreationUtcTime-->
+		<FileCreateTime onmatch="include">
+			<Image condition="begin with">C:\Users</Image> <!--Look for timestomping in user area-->
+		</FileCreateTime>
+
+		<FileCreateTime onmatch="exclude">
+			<Image condition="image">OneDrive.exe</Image> <!--OneDrive constantly changes file times-->
+			<Image condition="image">C:\Windows\system32\backgroundTaskHost.exe</Image>
+			<Image condition="contains">setup</Image> <!--Ignore setups-->
+			<Image condition="contains">install</Image> <!--Ignore setups-->
+			<Image condition="contains">Update\</Image> <!--Ignore setups-->
+			<Image condition="end with">redist.exe</Image> <!--Ignore setups-->
+			<Image condition="is">msiexec.exe</Image> <!--Ignore setups-->
+			<Image condition="is">TrustedInstaller.exe</Image> <!--Ignore setups-->
+		</FileCreateTime>
+
+	<!--SYSMON EVENT ID 3 : NETWORK CONNECTION INITIATED [NetworkConnect]-->
+		<!--COMMENT:	By default this configuration takes a very conservative approach to network logging, limited to only extremely high-signal events.-->
+		<!--COMMENT:	[ https://attack.mitre.org/wiki/Command_and_Control ] [ https://attack.mitre.org/wiki/Exfiltration ] [ https://attack.mitre.org/wiki/Lateral_Movement ] -->
+		<!--TECHNICAL:	For the DestinationHostname, Sysmon uses the GetNameInfo API, which will often not have any information, and may just be a CDN. This is NOT reliable for filtering.-->
+		<!--TECHNICAL:	For the DestinationPortName, Sysmon uses the GetNameInfo API for the friendly name of ports you see in logs.-->
+		<!--TECHNICAL:	These exe do not initiate their connections, and thus includes do not work in this section: BITSADMIN NLTEST-->
+		
+		<!-- https://www.first.org/resources/papers/conf2017/APT-Log-Analysis-Tracking-Attack-Tools-by-Audit-Policy-and-Sysmon.pdf -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, User, Protocol, Initiated, SourceIsIpv6, SourceIp, SourceHostname, SourcePort, SourcePortName, DestinationIsIpV6, DestinationIp, DestinationHostname, DestinationPort, DestinationPortName-->
+		<NetworkConnect onmatch="exclude">
+		</NetworkConnect>
+
+	<!--SYSMON EVENT ID 4 : RESERVED FOR SYSMON STATUS MESSAGES-->
+		<!--DATA: UtcTime, State, Version, SchemaVersion-->
+		<!--Cannot be filtered.-->
+
+	<!--SYSMON EVENT ID 5 : PROCESS ENDED [ProcessTerminate]-->
+		<!--COMMENT:	Useful data in building infection timelines.-->
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image-->
+		<ProcessTerminate onmatch="include">
+			<Image condition="begin with">C:\Users</Image> <!--Process terminations by user binaries-->
+		</ProcessTerminate>
+
+	<!--SYSMON EVENT ID 6 : DRIVER LOADED INTO KERNEL [DriverLoad]-->
+		<!--COMMENT:	Because drivers with bugs can be used to escalate to kernel permissions, be extremely selective
+			about what you exclude from monitoring. Low event volume, little incentive to exclude.
+			[ https://attack.mitre.org/wiki/Technique/T1014 ] -->
+		<!--TECHNICAL:	Sysmon will check the signing certificate revocation status of any driver you don't exclude.-->
+
+		<!--DATA: UtcTime, ImageLoaded, Hashes, Signed, Signature, SignatureStatus-->
+		<DriverLoad onmatch="exclude">
+			<Signature condition="contains">microsoft</Signature> <!--Exclude signed Microsoft drivers-->
+			<Signature condition="contains">windows</Signature> <!--Exclude signed Microsoft drivers-->
+			<Signature condition="begin with">Intel </Signature> <!--Exclude signed Intel drivers-->
+		</DriverLoad>
+
+	<!--SYSMON EVENT ID 7 : DLL (IMAGE) LOADED BY PROCESS [ImageLoad]-->
+		<!--COMMENT:	Can cause high system load, disabled by default.-->
+		<!--COMMENT:	[ https://attack.mitre.org/wiki/Technique/T1073 ] [ https://attack.mitre.org/wiki/Technique/T1038 ] [ https://attack.mitre.org/wiki/Technique/T1034 ] -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, ImageLoaded, Hashes, Signed, Signature, SignatureStatus-->
+		<ImageLoad onmatch="exclude">
+			<!--
+				Signature                                                                        Count
+				Microsoft Windows                                                                540676
+					Valid                                                                        540676
+				Johannes Schindelin                                                              8696
+					Valid                                                                        8696
+				Microsoft Corporation                                                            6626
+					Valid                                                                        6626
+				Google LLC                                                                       4211
+					Valid                                                                        4211
+				Microsoft Windows Hardware Compatibility Publisher                               1342
+					Valid                                                                        1342
+				AhnLab, Inc.                                                                     730
+					Valid                                                                        730
+				Microsoft Windows Publisher                                                      284
+					Valid                                                                        284
+				NVIDIA Corporation                                                               162
+					Valid                                                                        162
+				Google Inc                                                                       109
+					Valid                                                                        109
+				Windows Phone                                                                    70
+			-->
+			<Signature condition="is">Microsoft Windows</Signature>
+			<Signature condition="is">Johannes Schindelin</Signature>
+			<Signature condition="is">Microsoft Corporation</Signature>
+			<Signature condition="is">Google LLC</Signature>
+			<Signature condition="is">Microsoft Windows Hardware Compatibility Publisher</Signature>
+			<Signature condition="is">AhnLab, Inc.</Signature>
+			<Signature condition="is">Microsoft Windows Publisher</Signature>
+			<Signature condition="is">NVIDIA Corporation</Signature>
+			<Signature condition="is">Google Inc</Signature>
+			<Signature condition="is">Windows Phone</Signature>
+		</ImageLoad>
+
+	<!--SYSMON EVENT ID 8 : REMOTE THREAD CREATED [CreateRemoteThread]-->
+		<!--COMMENT:	Monitor for processes injecting code into other processes. Often used by malware to cloak their actions. Also when Firefox loads Flash.
+		[ https://attack.mitre.org/wiki/Technique/T1055 ] -->
+
+		<!--DATA: UtcTime, SourceProcessGuid, SourceProcessId, SourceImage, TargetProcessId, TargetImage, NewThreadId, StartAddress, StartModule, StartFunction-->
+		<CreateRemoteThread onmatch="exclude">
+		</CreateRemoteThread>
+
+	<!--SYSMON EVENT ID 9 : RAW DISK ACCESS [RawAccessRead]-->
+		<!--EVENT 9: "RawAccessRead detected"-->
+		<!--COMMENT:	Can cause high system load, disabled by default.-->
+		<!--COMMENT:	Monitor for raw sector-level access to the disk, often used to bypass access control lists or access locked files.
+			Disabled by default since including even one entry here activates this component. Reward/performance/rule maintenance decision.
+			Encourage you to experiment with this feature yourself. [ https://attack.mitre.org/wiki/Technique/T1067 ] -->
+		<!--COMMENT:	You will likely want to set this to a full capture on domain controllers, where no process should be doing raw reads.-->
+
+
+	<!--SYSMON EVENT ID 10 : INTER-PROCESS ACCESS [ProcessAccess]-->
+		<!--EVENT 10: "Process accessed"-->
+		<!--COMMENT:	Can cause high system load, disabled by default.-->
+		<!--COMMENT:	Monitor for processes accessing other process' memory.-->
+
+
+	<!--SYSMON EVENT ID 11 : FILE CREATED [FileCreate]-->
+		<!--EVENT 11: "File created"-->
+		<!--NOTE:	Other filesystem "minifilters" can make it appear to Sysmon that some files are being written twice. This is not a Sysmon issue, per Mark Russinovich.-->
+		<!--NOTE:	You may not see files detected by antivirus. Other filesystem minifilters, like antivirus, can act before Sysmon receives the alert a file was written.-->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, TargetFilename, CreationUtcTime-->
+		<FileCreate onmatch="exclude">
+		<!--
+			Image                                                                            Count
+			D:\mat\Projects\Trainings\Tools\elasticsearch-7.1.0\bin\elasticsearch-service-x64.exe 207645
+			C:\Program Files (x86)\Google\Chrome\Application\chrome.exe                      16127
+			D:\mat\Projects\Trainings\Tools\Agent\Winlogbeat\winlogbeat.exe                  14101
+			C:\Program Files\Google\Drive\googledrivesync.exe                                9990
+			C:\WINDOWS\winsxs\amd64_microsoft-windows-servicingstack_31bf3856ad364e35_10.0.16299.1143_none_10cd8a51f90107ad\TiWorker.exe 7528
+			C:\mat\Collection\Winlogbeat\winlogbeat-7.1.1-windows-x86_64\winlogbeat.exe      4705
+			E:\matt\Collection\winlogbeat-7.1.1-windows-x86_64\winlogbeat.exe                4307
+			c:\windows\system32\svchost.exe                                                  3849
+			C:\ProgramData\Anaconda3\python.exe                                              2068
+			C:\WINDOWS\System32\svchost.exe                                                  1596
+			C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe                        1554
+			C:\Users\Administrator\AppData\Local\Programs\Microsoft VS Code\Code.exe         1476
+			C:\ProgramData\osquery\osqueryd\osqueryd.exe                                     911
+			C:\WINDOWS\system32\ProvTool.exe                                                 845
+			C:\WINDOWS\system32\backgroundTaskHost.exe                                       715
+			C:\Users\tester\AppData\Local\Microsoft\OneDrive\Update\OneDriveSetup.exe        620
+		-->
+		
+		<!--
+			TargetFilename                                                                   Count
+			C:\ProgramData\winlogbeat\.winlogbeat.yml.new                                    23110
+			C:\Users\ADMINI~1\AppData\Local\Google\Drive\user_default\sync_config.db-wal     2697
+			C:\Users\ADMINI~1\AppData\Local\Google\Drive\user_default\sync_config.db-shm     2696
+			C:\Windows\SoftwareDistribution\Download\6549524dcd2d4f9eec72febdbb63c6c5\Metadata\$dpx$.tmp 894
+			C:\Users\ADMINI~1\AppData\Local\Google\Drive\user_default\uploader.db-shm        767
+			C:\Users\ADMINI~1\AppData\Local\Google\Drive\user_default\uploader.db-wal        767
+			C:\Users\Administrator\.ipython\profile_default\history.sqlite-journal           453
+			C:\Users\Administrator\AppData\Roaming\jupyter\nbsignatures.db-journal           448
+			C:\Program Files\AhnLab\Safe Transaction\DB\schedule.db-journal                  397
+			C:\Users\Administrator\AppData\Local\Google\Chrome\User Data\Default\Code Cache\js\index-dir\temp-index 257
+			C:\Users\Administrator\AppData\Local\Microsoft\Credentials\1F263B55C5FC108E7325CDBCA3771B1E 242
+			C:\Users\Administrator\AppData\Local\Microsoft\Credentials\37119E49A725CC10C92BBB1992B8EAEE 242
+			D:\mat\Projects\Trainings\SecurityBigDataMachineLearningJupyterNotebook\.~WindowsEvents.ipynb 191
+			D:\mat\Projects\Trainings\SecurityBigDataMachineLearningJupyterNotebook\WindowsEvents.ipynb 191
+		-->
+			<Image condition="is">elasticsearch-service-x64.exe</Image>
+            <TargetFilename condition="contains">elasticsearch-7.1.0\data</TargetFilename> 
+            <TargetFilename condition="contains">SampleStore</TargetFilename>
+		</FileCreate>
+
+
+	<!--SYSMON EVENT ID 12 & 13 & 14 : REGISTRY MODIFICATION [RegistryEvent]-->
+		<!--EVENT 12: "Registry object added or deleted"-->
+		<!--EVENT 13: "Registry value set-->
+		<!--EVENT 14: "Registry objected renamed"-->
+
+		<!--NOTE:	Windows writes hundreds or thousands of registry keys a minute, so just because you're not changing things, doesn't mean these rules aren't being run.-->
+		<!--NOTE:	You do not have to spend a lot of time worrying about performance, CPUs are fast, but it's something to consider. Every rule and condition type has a small cost.-->
+		<!--NOTE:	"contains" works by finding the first letter, then matching the second, etc, so the first letters should be as low-occurrence as possible.-->
+		<!--NOTE:	[ https://attack.mitre.org/wiki/Technique/T1112 ] -->
+
+		<!--TECHNICAL:	You cannot filter on the "Details" attribute, due to performance issues when very large keys are written, and variety of data formats-->
+		<!--TECHNICAL:	Possible prefixes are HKLM, HKCR, and HKU-->
+		<!--CRITICAL:	Schema version 3.30 and higher change HKLM\="\REGISTRY\MACHINE\" and HKU\="\REGISTRY\USER\" and HKCR\="\REGISTRY\MACHINE\SOFTWARE\Classes\" and CurrentControlSet="ControlSet001"-->
+		<!--CRITICAL:	Due to a bug, Sysmon versions BEFORE 7.01 may not properly log with the new prefix style for registry keys that was originally introduced in schema version 3.30-->
+		<!--NOTE:	Because Sysmon runs as a service, it has no filtering ability for, or concept of, HKCU or HKEY_CURRENT_USER. Use "contains" or "end with" to get around this limitation-->
+
+		<!-- ! CRITICAL NOTE !:	It may appear this section is MISSING important entries, but SOME RULES MONITOR MANY KEYS, so look VERY CAREFULLY to see if something is already covered.-->
+
+		<!--DATA: EventType, UtcTime, ProcessGuid, ProcessId, Image, TargetObject, Details (can't filter on), NewName (can't filter on)-->
+		<RegistryEvent onmatch="exclude">
+
+		<!--
+			C:\WINDOWS\system32\svchost.exe                                                  1044703
+				HKCR                                                                         1021534
+				HKLM\DRIVERS\DriverDatabase\DeviceIds                                        13226
+				HKLM\DRIVERS\DriverDatabase\DriverPackages                                   4722
+				HKLM\DRIVERS\DriverDatabase\DriverInfFiles                                   624
+				HKLM\System\CurrentControlSet\Services\Tcpip\Parameters                      303
+				HKLM\System\CurrentControlSet\Services\NetBT                                 206
+				HKLM\SOFTWARE\Microsoft\WindowsUpdate\UpdatePolicy\Settings                  102
+		-->
+			<TargetObject condition="is">HKCR</TargetObject>
+			<TargetObject condition="is">HKLM\DRIVERS\DriverDatabase\DeviceIds</TargetObject>
+			<TargetObject condition="is">HKLM\DRIVERS\DriverDatabase\DriverPackages</TargetObject>
+			<TargetObject condition="is">HKLM\DRIVERS\DriverDatabase\DriverInfFiles</TargetObject>
+			<TargetObject condition="is">HKLM\System\CurrentControlSet\Services\Tcpip\Parameters</TargetObject>
+			<TargetObject condition="is">HKLM\System\CurrentControlSet\Services\NetBT</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\WindowsUpdate\UpdatePolicy\Settings</TargetObject>
+
+		<!--
+			C:\WINDOWS\Sysmon.exe                                                            121449
+				HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Disallowed                    9723
+				HKLM\SOFTWARE\Microsoft\SystemCertificates\Disallowed                        9720
+				HKU\.DEFAULT\Software\Microsoft\SystemCertificates\Disallowed                9720
+				HKU\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\WinTrust\Trust Providers\Software Publishing 9547
+				HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Disallowed\CRLs               4863
+				HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Disallowed\CTLs               4863
+				HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Disallowed\Certificates       4863
+				HKLM\SOFTWARE\Microsoft\SystemCertificates\Disallowed\CRLs                   4861
+				HKLM\SOFTWARE\Microsoft\SystemCertificates\Disallowed\CTLs                   4861
+				HKLM\SOFTWARE\Microsoft\SystemCertificates\Disallowed\Certificates           4861
+				HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Disallowed               4861
+				HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Disallowed\CRLs          4861
+				HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Disallowed\CTLs          4861
+				HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Disallowed\Certificates  4861
+				HKU\.DEFAULT\Software\Microsoft\SystemCertificates\Disallowed\CTLs           4860
+				HKU\.DEFAULT\Software\Microsoft\SystemCertificates\Disallowed\Certificates   4860
+				HKU\.DEFAULT\Software\Policies\Microsoft\SystemCertificates\Disallowed       4860
+				HKU\.DEFAULT\Software\Policies\Microsoft\SystemCertificates\Disallowed\CRLs  4860
+				HKU\.DEFAULT\Software\Policies\Microsoft\SystemCertificates\Disallowed\CTLs  4860
+				HKU\.DEFAULT\Software\Policies\Microsoft\SystemCertificates\Disallowed\Certificates 4860
+				HKU\.DEFAULT\Software\Microsoft\SystemCertificates\Disallowed\CRLs           4859
+		-->
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Disallowed</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\SystemCertificates\Disallowed</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Microsoft\SystemCertificates\Disallowed</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\WinTrust\Trust</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Disallowed\CRLs</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Disallowed\CTLs</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Disallowed\Certificates</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\SystemCertificates\Disallowed\CRLs</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\SystemCertificates\Disallowed\CTLs</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Microsoft\SystemCertificates\Disallowed\Certificates</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Disallowed</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Disallowed\CRLs</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Disallowed\CTLs</TargetObject>
+			<TargetObject condition="is">HKLM\SOFTWARE\Policies\Microsoft\SystemCertificates\Disallowed\Certificates</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Microsoft\SystemCertificates\Disallowed\CTLs</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Microsoft\SystemCertificates\Disallowed\Certificates</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Policies\Microsoft\SystemCertificates\Disallowed</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Policies\Microsoft\SystemCertificates\Disallowed\CRLs</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Policies\Microsoft\SystemCertificates\Disallowed\CTLs</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Policies\Microsoft\SystemCertificates\Disallowed\Certificates</TargetObject>
+			<TargetObject condition="is">HKU\.DEFAULT\Software\Microsoft\SystemCertificates\Disallowed\CRLs</TargetObject>
+		</RegistryEvent>
+
+
+	<!--SYSMON EVENT ID 15 : ALTERNATE DATA STREAM CREATED [FileCreateStreamHash]-->
+		<!--EVENT 15: "File stream created"-->
+		<!--COMMENT:	Any files created with an NTFS Alternate Data Stream which match these rules will be hashed and logged.
+			[ https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/ ]
+			ADS's are used by browsers and email clients to mark files as originating from the Internet or other foreign sources.
+			[ https://textslashplain.com/2016/04/04/downloads-and-the-mark-of-the-web/ ] -->
+		<!--NOTE: Other filesystem minifilters can make it appear to Sysmon that some files are being written twice. This is not a Sysmon issue, per Mark Russinovich.-->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, Image, TargetFilename, CreationUtcTime, Hash-->
+		<FileCreateStreamHash onmatch="exclude">
+		</FileCreateStreamHash>
+
+
+	<!--SYSMON EVENT ID 16 : SYSMON CONFIGURATION CHANGE-->
+		<!--EVENT 16: "Sysmon config state changed"-->
+		<!--COMMENT:	This ONLY logs if the hash of the configuration changes. Running "sysmon.exe -c" with the current configuration will not be logged with Event 16-->
+		
+		<!--DATA: UtcTime, Configuration, ConfigurationFileHash-->
+		<!--Cannot be filtered.-->
+
+	<!--SYSMON EVENT ID 17 & 18 : PIPE CREATED / PIPE CONNECTED [PipeEvent]-->
+		<!--EVENT 17: "Pipe Created"-->
+		<!--EVENT 18: "Pipe Connected"-->
+
+		<!--ADDITIONAL REFERENCE: [ https://www.cobaltstrike.com/help-smb-beacon ] -->
+		<!--ADDITIONAL REFERENCE: [ https://blog.cobaltstrike.com/2015/10/07/named-pipe-pivoting/ ] -->
+
+		<!--DATA: UtcTime, ProcessGuid, ProcessId, PipeName, Image-->
+		<PipeEvent onmatch="exclude">
+		</PipeEvent>
+
+	<!--SYSMON EVENT ID 19 & 20 & 21 : WMI EVENT MONITORING [WmiEvent]-->
+		<!--EVENT 19: "WmiEventFilter activity detected"-->
+		<!--EVENT 20: "WmiEventConsumer activity detected"-->
+		<!--EVENT 21: "WmiEventConsumerToFilter activity detected"-->
+
+		<!--ADDITIONAL REFERENCE: [ https://www.darkoperator.com/blog/2017/10/15/sysinternals-sysmon-610-tracking-of-permanent-wmi-events ] -->
+		<!--ADDITIONAL REFERENCE: [ https://rawsec.lu/blog/posts/2017/Sep/19/sysmon-v610-vs-wmi-persistence/ ] -->
+
+		<!--DATA: EventType, UtcTime, Operation, User, Name, Type, Destination, Consumer, Filter-->
+		<WmiEvent onmatch="exclude">
+		</WmiEvent>
+
+	<!--SYSMON EVENT ID 255 : ERROR-->
+		<!--"This event is generated when an error occurred within Sysmon. They can happen if the system is under heavy load
+			and certain tasked could not be performed or a bug exists in the Sysmon service. You can report any bugs on the
+			Sysinternals forum or over Twitter (@markrussinovich)."-->
+		<!--Cannot be filtered.-->
+
+	</EventFiltering>
+</Sysmon>
