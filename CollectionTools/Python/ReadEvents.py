@@ -21,10 +21,9 @@ class WindowsEvent:
         #    EvtOpenChannelPath (1) or EvtOpenFilePath (2)
         # Session=None : PyEVT_HANDLE
         #    Handle to a remote session (see win32evtlog::EvtOpenSession), or None for local machine.
-        win32evtlog.EvtOpenLog('', 1 , None)
+        win32evtlog.EvtOpenLog('ForwardedEvents', 1 , None)
 
-        flags= win32evtlog.EVENTLOG_BACKWARDS_READ|win32evtlog.EVENTLOG_SEQUENTIAL_READ
-
+        flags= win32evtlog.EVENTLOG_BACKWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
         total = win32evtlog.GetNumberOfEventLogRecords(log_handle)
         print("Total: %d" % total)
 
