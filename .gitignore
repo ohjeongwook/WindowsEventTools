@@ -1,1 +1,3 @@
 Events/Events/Microsoft-Windows-Kernel-Process/Events/WinEvent.txt
+Events/Registrykeys/Channels-NEWSTARTBASE.txt
+Events/Registrykeys/EventLog-NEWSTARTBASE.txt
