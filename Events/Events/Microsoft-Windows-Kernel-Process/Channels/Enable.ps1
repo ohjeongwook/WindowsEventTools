@@ -1,4 +1,4 @@
-. ..\..\..\Tools\WinEvent.ps1
+. "$PSScriptRoot\..\..\..\Tools\WinEvent.ps1"
 
 $event = Get-WinEvent -ListLog "Microsoft-Windows-Kernel-Process/Analytic" -Force 
 # -ErrorAction SilentlyContinue

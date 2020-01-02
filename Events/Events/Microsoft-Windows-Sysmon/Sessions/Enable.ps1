@@ -1,4 +1,4 @@
-. ..\..\..\Tools\WinEvent.ps1
+. "$PSScriptRoot\..\..\..\Tools\WinEvent.ps1"
 
 Get-WinEvent -ListLog "Microsoft-Windows-Sysmon/Operational" -Force -ErrorAction SilentlyContinue | 
 Enable-WinEvent -Passthru | 
