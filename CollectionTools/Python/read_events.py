@@ -49,7 +49,11 @@ class WindowsEvent:
 
         return (log_file_path, ret)
 
-windows_event = WindowsEvent(channel_name = "Microsoft-Windows-DNS-Client/Operational")
-#windows_event = WindowsEvent(channel_name = "Security")
-print(windows_event.check_channel_config())
-windows_event.read_log()
+if __name__ == '__main__':
+    import sys
+
+    channel_name = sys.argv[1]
+    windows_event = WindowsEvent(channel_name = channel_name)
+    #windows_event = WindowsEvent(channel_name = "Security")
+    print(windows_event.check_channel_config())
+    windows_event.read_log()
